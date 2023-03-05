@@ -23,7 +23,7 @@ export default function Levels() {
 
   useEffect(() => {
     getLevels();
-  });
+  }, []);
 
   const deleveLevel = async(id) =>
   deleteData(`levels/${id}`)
