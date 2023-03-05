@@ -18,6 +18,14 @@ Depois de executado as aplicações vão estar disponíveis nas seguintes url:
 - Frontend: http://localhost:3000
 - Backend: http://localhost:3001
 
+## Testes
+
+Para rodar os testes, execute o seguinte comando no terminal:
+
+```
+docker-compose exec backend npm run test:integration
+```
+
 ## Informações gerais
 
 O Backend foi desenvolvido em typescript com nodejs, foi utilizado o framework express para contrução das apis, o sequelize como ORM da aplicação, e foi utilizado chai, mocha e sinon para contrução dos testes.
@@ -87,3 +95,5 @@ O Frontend foi desenvolvido com React utilizando a biblioteca de interface Manti
 | nivel     | string   |
 
 ### DELETE `/levels/:id` Delete um nível existente
+
+

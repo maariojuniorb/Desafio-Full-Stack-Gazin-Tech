@@ -44,7 +44,6 @@ export default class DeveloperController {
     next: NextFunction,
   ): Promise<Response | void> => {
     const { body } = req;
-    console.log(body);
     try {
       const result = await this.developerService.registerDeveloper(body);
       return res.status(201).json(result);
