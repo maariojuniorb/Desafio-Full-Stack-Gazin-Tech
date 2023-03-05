@@ -1,17 +1,20 @@
 import * as express from 'express';
 import LevelsController from '../Controllers/levelsController';
-import Validation from '../Validation/Validations';
+import ValidationLevelsService from '../Services/validationLevelsService';
 
 const levelRoutes = express.Router();
+const levelsController = LevelsController.getInstance();
+const validationLevelsService = ValidationLevelsService.getInstance();
 
-const levelsController = new LevelsController();
-const validation = new Validation();
+levelRoutes.get('/', levelsController.getAllLevels);
 
-levelRoutes.get('/', levelsController.getLevels);
+levelRoutes.get('/:id', levelsController.getLevelById);
 
-levelRoutes.post('/', validation.validateLevel, levelsController.registerLevel);
+levelRoutes.get('/search', levelsController.getLevelsByQuery);
 
-levelRoutes.put('/:id', validation.validateLevel, levelsController.editLevel);
+levelRoutes.post('/', validationLevelsService.validateLevel, levelsController.registerLevel);
+
+levelRoutes.put('/:id', validationLevelsService.validateLevel, levelsController.editLevel);
 
 levelRoutes.delete('/:id', levelsController.deleteLevel);
 

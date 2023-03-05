@@ -1,9 +1,9 @@
-import ErrorHandler from '../errors/errorHandler';
-import LevelsModel from '../database/Models/LevelsModels';
-import DevelopersModel from '../database/Models/DevelopersModel';
-import Ilevel from '../interfaces/ILevel';
-import sequelize from '../database/Models';
-// import Validations from '../Validation/Validations';
+import ErrorHandler from '../Config/errors/errorHandler';
+import LevelsModel from '../Config/database/Models/LevelsModels';
+import IlevelFilter from '../Domains/ILevelFilter';
+import DevelopersModel from '../Config/database/Models/DevelopersModel';
+import UtilsService from './utilsService';
+import Ilevel from '../Domains/ILevel';
 
 export default class LevelService {
   private static _instance: LevelService;
@@ -26,20 +26,26 @@ export default class LevelService {
     return result;
   };
 
+  public getLevelByQuery = async (query: IlevelFilter): Promise<Ilevel[]> => {
+    const filter = UtilsService.stripUndefined(query);
+    const result = await LevelsModel.findAll({
+      where: { ...filter },
+    });
+    return result;
+  };
+
   public getLevelById = async (id: number): Promise<Ilevel | undefined> => {
     const result = await LevelsModel.findByPk(id);
     if (!result) return undefined;
     return result;
   };
 
-  public registerLevel = async (nivel: Ilevel): Promise<void> => {
+  public registerLevel = async (nivel: string): Promise<void | Ilevel> => {
     try {
-      await sequelize.transaction(async (t) => {
-        await LevelsModel.create(
-          { nivel },
-          { transaction: t },
-        );
-      });
+      const { id } = await LevelsModel.create(
+        { nivel },
+      );
+      return { id, nivel };
     } catch (error) {
       throw new ErrorHandler('Não foi possível cadastrar o nível', 400);
     }

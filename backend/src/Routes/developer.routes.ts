@@ -1,39 +1,44 @@
 import * as express from 'express';
 import DeveloperController from '../Controllers/developersController';
-import Validation from '../Validation/Validations';
+import ValidationDeveloperService from '../Services/validationsDevelopersService';
+import ValidationLevelService from '../Services/validationLevelsService';
 
 const developersRoutes = express.Router();
-
-const developerController = new DeveloperController();
-
-const validation = new Validation();
+const developerController = DeveloperController.getInstance();
+const validationLevelsService = ValidationLevelService.getInstance();
+const validationsDevelopersService = ValidationDeveloperService.getInstance();
 
 developersRoutes.get('/', developerController.getDevelopers);
 
+developersRoutes.get('/:id', developerController.getDevelopersById);
+
+developersRoutes.get('/search', developerController.getDevelopersByQuery);
+
 developersRoutes.post(
   '/',
-  validation.checkFieldsOfDevelopers,
-  validation.verifyIfNivelExist,
+  validationsDevelopersService.checkFieldsOfDevelopers,
+  validationLevelsService.verifyIfNivelExist,
   developerController.registerDeveloper,
 );
 
 developersRoutes.put(
   '/:id',
-  validation.checkFieldsOfDevelopers,
-  validation.verifyIfIdExist,
-  validation.verifyIfNivelExist,
+  validationsDevelopersService.checkFieldsOfDevelopers,
+  validationsDevelopersService.verifyIfIdExist,
+  validationLevelsService.verifyIfNivelExist,
   developerController.editDeveloper,
 );
 
 developersRoutes.patch(
   '/:id',
-  validation.verifyIfIdExist,
-  developerController.partialEditDeveloper,
+  validationsDevelopersService.verifyIfIdExist,
+  validationLevelsService.verifyIfNivelExist,
+  developerController.editDeveloper,
 );
 
 developersRoutes.delete(
   '/:id',
-  validation.verifyIfIdExist,
+  validationsDevelopersService.verifyIfIdExist,
   developerController.deleteDeveloper,
 );
 

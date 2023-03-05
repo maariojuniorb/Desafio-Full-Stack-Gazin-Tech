@@ -1,5 +1,3 @@
-import Ideveloper from "../../../src/interfaces/IDeveloper";
-
 const allFiles = [
   {
     id: 1,
@@ -34,7 +32,7 @@ const bodySucess = {
     nivel: 4,
     nome: "Carla Santana",
     sexo: "Feminino",
-    dataNascimento: new Date('1993-12-17'),
+    dataNascimento: '1993-12-17',
     idade: 24,
     hobby: "Swimming",
 }
@@ -44,7 +42,7 @@ const responseBodySucess = {
   nivel: 4,
   nome: "Carla Santana",
   sexo: "Feminino",
-  dataNascimento: new Date("1993-12-17"),
+  dataNascimento: "1993-12-17",
   idade: 24,
   hobby: "Swimming",
 }

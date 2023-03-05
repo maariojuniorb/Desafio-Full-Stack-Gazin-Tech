@@ -1,7 +1,9 @@
-import ErrorHandler from '../errors/errorHandler';
-import DevelopersModel from '../database/Models/DevelopersModel';
-import LevelsModel from '../database/Models/LevelsModels';
-import Ideveloper from '../interfaces/IDeveloper';
+import ErrorHandler from '../Config/errors/errorHandler';
+import DevelopersModel from '../Config/database/Models/DevelopersModel';
+import LevelsModel from '../Config/database/Models/LevelsModels';
+import IdeveloperFilter from '../Domains/IDeveloperFilter';
+import UtilsService from './utilsService';
+import Ideveloper from '../Domains/IDeveloper';
 
 export default class DevelopersService {
   private static _instance: DevelopersService;
@@ -24,6 +26,19 @@ export default class DevelopersService {
     return result;
   };
 
+  public getDevelopersById = async (id: number): Promise<Ideveloper | null> => {
+    const result = await DevelopersModel.findByPk(id);
+    return result;
+  };
+
+  public getDevelopersByQuery = async (query: IdeveloperFilter): Promise<Ideveloper[]> => {
+    const filter = UtilsService.stripUndefined(query);
+    const result = await DevelopersModel.findAll({
+      where: { ...filter },
+    });
+    return result;
+  };
+
   public registerDeveloper = async (developer: Ideveloper): Promise<void | Ideveloper> => {
     try {
       const { id } = await DevelopersModel.create(
@@ -35,31 +50,27 @@ export default class DevelopersService {
     }
   };
 
-  public editDeveloper = async (id: number, developer: Ideveloper): Promise<void> => {
+  public editDeveloper = async (id: number, developer: Ideveloper): Promise<Ideveloper | void> => {
+    const filter = UtilsService.stripUndefined(developer);
     try {
       await DevelopersModel.update(
-        { ...developer },
+        { ...filter },
         { where: { id } },
       );
+      const result = await this.getDevelopersById(id);
+      if (result) return result;
     } catch (error) {
-      throw new ErrorHandler('Não foi possível atualizar o usuário', 400);
-    }
-  };
-
-  public partialEditDeveloper = async (id: number, developer: Ideveloper): Promise<void> => {
-    try {
-      await DevelopersModel.update(
-        { ...developer },
-        { where: { id } },
-      );
-    } catch (error) {
-      throw new ErrorHandler('Não foi possível atualizar o usuário', 400);
+      throw new ErrorHandler('Não foi possível atualizar o desenvolvedor', 400);
     }
   };
 
   public deleteDeveloper = async (id: number): Promise<void> => {
-    await DevelopersModel.destroy(
-      { where: { id } },
-    );
+    try {
+      await DevelopersModel.destroy(
+        { where: { id } },
+      );
+    } catch (error) {
+      throw new ErrorHandler('Não foi possível deletar o desenvoledor', 400);
+    }
   };
 }

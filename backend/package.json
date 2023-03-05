@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "build": "/bin/sh tsc_eval.sh",
-    "start": "ts-node src/server.ts",
+    "start": "npm run reset:db && ts-node src/server.ts",
     "reset:db": "npx sequelize db:drop && npx sequelize db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
     "dev": "nodemon --watch \"./src/**\" ./src/server.ts",
     "test:integration": "mocha --require ts-node/register tests/integration/*test.ts --exit",
@@ -45,6 +45,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "10.0.0",
     "express": "4.17.1",
     "jest": "^29.4.3",
