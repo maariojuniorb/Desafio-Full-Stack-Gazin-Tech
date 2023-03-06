@@ -36,9 +36,14 @@ O Frontend foi desenvolvido com React utilizando a biblioteca de interface Manti
 
 ## Documentação API (Backend)
 
-### GET `/developers` Retorna todos os desenvolvedores cadastrados
+### GET `/developers?` Retorna todos os desenvolvedores cadastrados
+#### Query String
+| name      | data type               |
+|-----------|-------------------------|
+| pagiaAtual        | number   |
+| tamanhoPagina     | number   |
 ### GET `/developers/:id` Retorna um desenvolvedor pelo id
-### GET `/developers/search?` Busca desenvolvedores baseado na query string
+### GET `/developers/search/query?` Busca desenvolvedores baseado na query string
 #### Query String
 | name      | data type               |
 |-----------|-------------------------|
@@ -73,9 +78,14 @@ O Frontend foi desenvolvido com React utilizando a biblioteca de interface Manti
 
 ### DELETE `/developers/:id` Delete um desenvolvedor existente
 
-### GET `/levels` Retorna todos os níveis cadastrados
+### GET `/levels?` Retorna todos os níveis cadastrados
+#### Query String
+| name      | data type               |
+|-----------|-------------------------|
+| pagiaAtual        | number   |
+| tamanhoPagina     | number   |
 ### GET `/levels/:id` Retorna um nível pelo id
-### GET `/leves/search?` Busca um nível baseado na query string
+### GET `/leves/search/query?` Busca um nível baseado na query string
 #### Query String
 | name      | data type               |
 |-----------|-------------------------|

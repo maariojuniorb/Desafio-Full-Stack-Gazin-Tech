@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
+import Page from '../Domains/IPageable';
 import DevelopersService from '../Services/developersService';
+
+const errorMessage = 'erro ao completar a requisição, verifique os campos e tente novamente';
 
 export default class DeveloperController {
   private static _instance: DeveloperController;
@@ -12,15 +15,28 @@ export default class DeveloperController {
 
   private developerService = DevelopersService.getInstance();
 
-  public getDevelopers = async (_req: Request, res: Response): Promise< Response | void> => {
-    const result = await this.developerService.getDevelopers();
-    return res.status(200).json(result);
+  public getAllDevelopers = async (req: Request, res: Response): Promise< Response | void> => {
+    try {
+      const paginaAtual = req.query.paginaAtual as string;
+      const tamanhoPagina = req.query.tamanhoPagina as string;
+      const page = new Page(Number(paginaAtual), Number(tamanhoPagina));
+      const result = await this.developerService.getAllDevelopers(page);
+      return res.status(200).json(result);
+    } catch (error) {
+      return res.status(400)
+        .json({ error: errorMessage });
+    }
   };
 
   public getDevelopersById = async (req: Request, res: Response): Promise< Response | void> => {
-    const { id } = req.params;
-    const result = await this.developerService.getDevelopersById(Number(id));
-    return res.status(200).json(result);
+    try {
+      const { id } = req.params;
+      const result = await this.developerService.getDevelopersById(Number(id));
+      return res.status(200).json(result);
+    } catch (error) {
+      return res.status(400)
+        .json({ error: errorMessage });
+    }
   };
 
   public getDevelopersByQuery = async (req: Request, res: Response): Promise<Response> => {
@@ -33,9 +49,14 @@ export default class DeveloperController {
       idade: req.query.idade as string,
       hobby: req.query.hobby as string,
     };
-    const result = await this.developerService.getDevelopersByQuery(filter);
-    if (result.length < 1) return res.status(404).json();
-    return res.status(200).json(result);
+    try {
+      const result = await this.developerService.getDevelopersByQuery(filter);
+      if (result.length < 1) return res.status(404).json();
+      return res.status(200).json(result);
+    } catch (error) {
+      return res.status(400)
+        .json({ error: 'erro ao completar a requisição, verifique os campos e tente novamente' });
+    }
   };
 
   public registerDeveloper = async (

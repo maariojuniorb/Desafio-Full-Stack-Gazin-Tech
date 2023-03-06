@@ -20,7 +20,7 @@ export default function DeveloperForm({
 
   useEffect(() => {
     const getLevels = () =>
-      requestData("/levels")
+      requestData("/levels?paginaAtual=0&tamanhoPagina=1000")
         .then((response) => setLevels(response))
         .catch((error) => console.log(error));
     getLevels();
@@ -28,13 +28,13 @@ export default function DeveloperForm({
 
   const form = useForm({
     initialValues: {
-      nivel: '',
-      nome: '',
-      sexo: 'Masculino',
-      dataNascimento: '',
-      idade: '',
-      hobby: ''
-    }
+      nivel: "",
+      nome: "",
+      sexo: "Masculino",
+      dataNascimento: "",
+      idade: "",
+      hobby: "",
+    },
   });
 
   useEffect(() => {

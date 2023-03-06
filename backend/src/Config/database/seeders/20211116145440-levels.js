@@ -4,6 +4,9 @@ module.exports = {
       'levels',
       [
         {
+          nivel: 'Estagiário',
+        },
+        {
           nivel: 'Jr A',
         },
         {
@@ -13,10 +16,28 @@ module.exports = {
           nivel: 'Jr C',
         },
         {
-          nivel: 'Pleno',
+          nivel: 'Pleno A',
+        },
+        {
+          nivel: 'Pleno B',
+        },
+        {
+          nivel: 'Pleno C',
         },
         {
           nivel: 'Senior',
+        },
+        {
+          nivel: 'Especialista',
+        },
+        {
+          nivel: 'QA',
+        },
+        {
+          nivel: 'PO',
+        },
+        {
+          nivel: 'SM',
         },
       ],
       {},

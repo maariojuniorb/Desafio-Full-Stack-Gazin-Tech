@@ -4,6 +4,7 @@ import LevelsModel from '../Config/database/Models/LevelsModels';
 import IdeveloperFilter from '../Domains/IDeveloperFilter';
 import UtilsService from './utilsService';
 import Ideveloper from '../Domains/IDeveloper';
+import IPageable from '../Domains/IPageable';
 
 export default class DevelopersService {
   private static _instance: DevelopersService;
@@ -14,7 +15,7 @@ export default class DevelopersService {
     return this._instance;
   };
 
-  public getDevelopers = async (): Promise<Ideveloper[] | void> => {
+  public getAllDevelopers = async (page: IPageable): Promise<Ideveloper[] | void> => {
     const result = await DevelopersModel.findAll({ include: [
       {
         model: LevelsModel,
@@ -22,6 +23,8 @@ export default class DevelopersService {
         attributes: ['nivel'],
       },
     ],
+    offset: page.getOffset(),
+    limit: page.getLimit(),
     });
     return result;
   };

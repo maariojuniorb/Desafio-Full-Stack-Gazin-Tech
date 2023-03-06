@@ -1,3 +1,4 @@
+import Page from '../Domains/IPageable';
 import ErrorHandler from '../Config/errors/errorHandler';
 import LevelsModel from '../Config/database/Models/LevelsModels';
 import IlevelFilter from '../Domains/ILevelFilter';
@@ -14,13 +15,15 @@ export default class LevelService {
     return this._instance;
   };
 
-  public getAll = async (): Promise<Ilevel[]> => {
+  public getAll = async (page: Page): Promise<Ilevel[]> => {
     const result = await LevelsModel.findAll({ include: [
       {
         model: DevelopersModel,
         as: 'associateDevelopers',
       },
     ],
+    offset: page.getOffset(),
+    limit: page.getLimit(),
     });
 
     return result;
@@ -28,6 +31,7 @@ export default class LevelService {
 
   public getLevelByQuery = async (query: IlevelFilter): Promise<Ilevel[]> => {
     const filter = UtilsService.stripUndefined(query);
+    console.log(filter);
     const result = await LevelsModel.findAll({
       where: { ...filter },
     });

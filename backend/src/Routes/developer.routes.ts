@@ -8,11 +8,11 @@ const developerController = DeveloperController.getInstance();
 const validationLevelsService = ValidationLevelService.getInstance();
 const validationsDevelopersService = ValidationDeveloperService.getInstance();
 
-developersRoutes.get('/', developerController.getDevelopers);
+developersRoutes.get('/', developerController.getAllDevelopers);
 
 developersRoutes.get('/:id', developerController.getDevelopersById);
 
-developersRoutes.get('/search', developerController.getDevelopersByQuery);
+developersRoutes.get('/search/query', developerController.getDevelopersByQuery);
 
 developersRoutes.post(
   '/',

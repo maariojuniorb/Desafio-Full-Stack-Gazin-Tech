@@ -10,7 +10,7 @@ levelRoutes.get('/', levelsController.getAllLevels);
 
 levelRoutes.get('/:id', levelsController.getLevelById);
 
-levelRoutes.get('/search', levelsController.getLevelsByQuery);
+levelRoutes.get('/search/query', levelsController.getLevelsByQuery);
 
 levelRoutes.post('/', validationLevelsService.validateLevel, levelsController.registerLevel);
 

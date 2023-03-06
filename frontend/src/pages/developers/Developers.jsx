@@ -1,4 +1,11 @@
-import { ActionIcon, Button, Flex, Notification, Table, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Flex,
+  Notification,
+  Table,
+  Title,
+} from "@mantine/core";
 import { useTimeout } from "@mantine/hooks";
 import { IconCheck, IconPencil, IconTrash, IconX } from "@tabler/icons-react";
 import React, { useContext, useEffect, useState } from "react";
@@ -10,39 +17,61 @@ export default function Developers() {
   const { developers, setDevelopers } = useContext(DesafioContext);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isFail, setIsFail] = useState(false);
+  const [actualPage, setActualPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [showLoadMore, setShowLoadMore] = useState(true);
 
   const { start } = useTimeout(() => {
-    setIsSuccess(false)
-    setIsFail(false)
-   }, 3000);
+    setIsSuccess(false);
+    setIsFail(false);
+  }, 3000);
+
+  const loadMore = () => {
+    const defaultPageSize = 10;
+    const updatedPageSize = pageSize + defaultPageSize;
+    setPageSize(updatedPageSize);
+    getDevelopers();
+  };
+
+  const shouldShowLoadMore = (developers) => {
+    if (developers.length < pageSize) setShowLoadMore(false);
+  };
 
   const getDevelopers = () =>
-    requestData("/developers")
-      .then((response) => setDevelopers(response))
+    requestData(
+      `/developers/?paginaAtual=${actualPage}&tamanhoPagina=${pageSize}`
+    )
+      .then((response) => {
+        setDevelopers(response);
+        shouldShowLoadMore(response);
+      })
       .catch((error) => console.log(error));
 
-  const deleveDeveloper = async(id) =>
+  const deleveDeveloper = async (id) =>
     deleteData(`developers/${id}`)
-    .then((response) => {
-      setIsFail(false);
-      setIsSuccess(true);
-      start();
-    })
-    .catch((error) => {
-      setIsSuccess(false);
-      setIsFail(true);
-      start();
-    });
+      .then((response) => {
+        setIsFail(false);
+        setIsSuccess(true);
+        start();
+      })
+      .catch((error) => {
+        setIsSuccess(false);
+        setIsFail(true);
+        start();
+      });
 
   useEffect(() => {
-    getDevelopers()
-  }, []);
+    getDevelopers();
+  }, [pageSize, showLoadMore, isSuccess, isFail]);
 
   return (
     <div>
-      <Flex mb={"16px"} justify='space-between'>
+      <Flex mb={"16px"} justify="space-between">
         <Title order={3}> Desenvolvedores </Title>
-        <Button color="teal" to='/developers/create' component={ Link }> Cadastrar Novo Desenvolvedor </Button>
+        <Button color="teal" to="/developers/create" component={Link}>
+          {" "}
+          Cadastrar Novo Desenvolvedor{" "}
+        </Button>
       </Flex>
       {isSuccess && (
         <Notification
@@ -94,12 +123,21 @@ export default function Developers() {
                 <td>{developer.idade}</td>
                 <td>{developer.hobby}</td>
                 <td>
-                  <ActionIcon color="blue" variant="outline" to={`/developers/edit/${developer.id}`} component={ Link }>
+                  <ActionIcon
+                    color="blue"
+                    variant="outline"
+                    to={`/developers/edit/${developer.id}`}
+                    component={Link}
+                  >
                     <IconPencil size="1.125rem" />
                   </ActionIcon>
                 </td>
                 <td>
-                  <ActionIcon color="red" variant="outline" onClick={() => deleveDeveloper(developer.id)}>
+                  <ActionIcon
+                    color="red"
+                    variant="outline"
+                    onClick={() => deleveDeveloper(developer.id)}
+                  >
                     <IconTrash size="1.125rem" />
                   </ActionIcon>
                 </td>
@@ -108,6 +146,11 @@ export default function Developers() {
           })}
         </tbody>
       </Table>
+      {showLoadMore && (
+        <Button radius="md" w={"150px"} mt={"16px"} onClick={() => loadMore()}>
+          Carregar mais
+        </Button>
+      )}
     </div>
   );
 }
